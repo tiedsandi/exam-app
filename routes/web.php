@@ -1,14 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\UjianAdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
 
 
 Route::group(['middleware' => "auth", "prefix" => '/admin', 'as' => 'admin.'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('/ujian', UjianAdminController::class);
 });
 
 
