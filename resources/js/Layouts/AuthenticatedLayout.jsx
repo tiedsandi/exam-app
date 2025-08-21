@@ -11,13 +11,13 @@ const menuNav = [
         icon: "fa-solid fa-tachograph-digital",
         title: "Dashboard",
         link: route("admin.dashboard"),
-        name: "dashboard",
+        name: "admin.dashboard",
     },
     {
         icon: "fa-solid fa-book",
         title: "Ujian",
-        link: route("admin.dashboard"),
-        name: "ujian.*",
+        link: route("admin.ujian.index"),
+        name: "admin.ujian.*",
     },
     {
         icon: "fa-solid fa-circle-question",

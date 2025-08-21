@@ -1,7 +1,6 @@
 import "../css/app.css";
 import "./bootstrap";
 
-import { HelmetProvider } from "react-helmet-async";
 import { createInertiaApp } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
@@ -18,11 +17,7 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(
-            <HelmetProvider>
-                <App {...props} />
-            </HelmetProvider>
-        );
+        root.render(<App {...props} />);
     },
     progress: {
         color: "#4B5563",

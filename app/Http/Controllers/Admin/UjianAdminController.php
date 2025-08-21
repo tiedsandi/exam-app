@@ -14,11 +14,12 @@ class UjianAdminController extends Controller
     //tampilkan halaman manajemen data
     public function index()
     {
-        $ujian = Ujian::orderBy('id', 'desc')->get();
+        $ujian = Ujian::orderBy('id', 'desc')->paginate(10);
         return Inertia::render('Ujian/Index', [
             'ujian' => $ujian
         ]);
     }
+
     //Tampilkan halaman tambah data
     public function create()
     {

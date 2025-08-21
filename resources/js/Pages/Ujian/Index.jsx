@@ -1,11 +1,11 @@
-import { Link, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Dialog from "@/Components/Dialog";
-import { Helmet } from "react-helmet-async";
 import { Inertia } from "@inertiajs/inertia";
+import Pagination from "@/Components/Pagination";
 
 export default function Index(props) {
     const { flash } = usePage().props;
@@ -33,12 +33,11 @@ export default function Index(props) {
 
     // data ujian
     const ujian = props.ujian;
+    // console.log(ujian);
 
     return (
         <AuthenticatedLayout>
-            <Helmet>
-                <title>Data Ujian</title>
-            </Helmet>
+            <Head title="Data Ujian" />
 
             <div className="max-w-6xl p-6 mx-auto">
                 <div className="p-6 bg-white rounded-lg shadow">
@@ -88,10 +87,10 @@ export default function Index(props) {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {ujian.map((uj, index) => (
+                                {ujian.data.map((uj, index) => (
                                     <tr key={uj.id}>
                                         <td className="px-4 py-2">
-                                            {index + 1}
+                                            {(ujian.from ?? 0) + index}
                                         </td>
                                         <td className="px-4 py-2">
                                             {uj.nama_ujian}
@@ -106,13 +105,17 @@ export default function Index(props) {
                                             {uj.durasi} menit
                                         </td>
                                         <td className="px-4 py-2">
-                                            {uj.acak_soal ? "Ya" : "Tidak"}
+                                            {uj.acak_soal === "Y"
+                                                ? "Ya"
+                                                : "Tidak"}
                                         </td>
                                         <td className="px-4 py-2">
-                                            {uj.acak_jawaban ? "Ya" : "Tidak"}
+                                            {uj.acak_jawaban === "Y"
+                                                ? "Ya"
+                                                : "Tidak"}
                                         </td>
                                         <td className="px-4 py-2">
-                                            {uj.tampilkan_hasil
+                                            {uj.tampilkan_hasil === "Y"
                                                 ? "Ya"
                                                 : "Tidak"}
                                         </td>
@@ -148,19 +151,19 @@ export default function Index(props) {
                                 ))}
                             </tbody>
                         </table>
+
+                        <Pagination links={ujian.links} />
                     </div>
                 </div>
             </div>
 
-            {/* Dialog konfirmasi */}
             <Dialog
                 openDialog={dialog.open}
                 closeDialog={handleDialogClose}
                 route={dialog.route}
             />
 
-            {/* Hot Toast */}
-            <Toaster position="top-right" />
+            <Toaster position="top-center" />
         </AuthenticatedLayout>
     );
 }
