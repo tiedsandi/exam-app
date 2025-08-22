@@ -69,20 +69,26 @@ class AdminSesiController extends Controller
      */
     public function show(Request $request, $id)
     {
-        if ($id != 0) $request->session()->put('idujian', $id);
-        else  $request->session()->put('idujian', "");
+        if ($id != 0) {
+            $request->session()->put('idujian', $id);
+        } else {
+            $request->session()->put('idujian', "");
+        }
 
         $sesi = Sesi::leftJoin('ujian', 'ujian.id', '=', 'sesi.id_ujian')
             ->select('ujian.nama_ujian', 'sesi.*')
-            ->orderBy('id', 'desc');
+            ->orderBy('sesi.id', 'desc');
 
-        if ($id != 0) $sesi = $sesi->where('id_ujian', '=', $id);
-        $sesi = $sesi->get();
+        if ($id != 0) {
+            $sesi = $sesi->where('id_ujian', '=', $id);
+        }
+
+        $sesi = $sesi->paginate(10)->withQueryString();
 
         return Inertia::render('Sesi/Index', [
             'ujian' => Ujian::all(),
             'sesi' => $sesi,
-            'id' => $id
+            'id' => $id,
         ]);
     }
 
