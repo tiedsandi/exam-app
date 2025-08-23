@@ -22,14 +22,14 @@ const menuNav = [
     {
         icon: "fa-solid fa-circle-question",
         title: "Soal Ujian",
-        link: route("admin.dashboard"),
-        name: "soal.*",
+        link: route("admin.soal.index"),
+        name: "admin.soal.*",
     },
     {
         icon: "fa-solid fa-clock",
         title: "Sesi Ujian",
-        link: route("admin.dashboard"),
-        name: "sesi.*",
+        link: route("admin.sesi.index"),
+        name: "admin.sesi.*",
     },
     {
         icon: "fa-solid fa-circle-user",
