@@ -34,7 +34,7 @@ const menuNav = [
     {
         icon: "fa-solid fa-circle-user",
         title: "Peserta Ujian",
-        link: route("admin.dashboard"),
+        link: route("admin.peserta.index"),
         name: "peserta.*",
     },
     {
