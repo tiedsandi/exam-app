@@ -41,7 +41,11 @@ export default function Index(props) {
 
     useEffect(() => {
         if (isMount.current) {
-            Inertia.get(route("admin.kelompok.show", ujian));
+            Inertia.get(
+                route("admin.kelompok.index"),
+                { ujian_id: ujian },
+                { preserveState: true, replace: true }
+            );
         } else {
             isMount.current = true;
         }

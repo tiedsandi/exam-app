@@ -18,27 +18,26 @@ class AdminKelompokController extends Controller
      */
     public function index(Request $request)
     {
-        $request->session()->put('idujian', "");
+        $query = Kelompok::with(['ujian', 'sesi', 'peserta'])->latest();
 
-        $kelompok = Kelompok::with(['ujian', 'sesi', 'peserta'])
-            ->latest()
-            ->paginate(10)
-            ->through(function ($klp) {
-                return [
-                    'id' => $klp->id,
-                    'no_ujian' => $klp->peserta->no_ujian ?? '-',
-                    'nama_peserta' => $klp->peserta->nama_peserta ?? '-',
-                    'nama_sesi' => $klp->sesi->nama_sesi ?? '-',
-                ];
-            });
+        if ($request->has('ujian_id') && $request->ujian_id) {
+            $query->where('id_ujian', $request->ujian_id);
+        }
 
+        $kelompok = $query->paginate(10)->through(fn($klp) => [
+            'id' => $klp->id,
+            'no_ujian' => $klp->peserta->no_ujian ?? '-',
+            'nama_peserta' => $klp->peserta->nama_peserta ?? '-',
+            'nama_sesi' => $klp->sesi->nama_sesi ?? '-',
+        ]);
 
         return Inertia::render('Kelompok/Index', [
             'ujian' => Ujian::all(),
             'kelompok' => $kelompok,
-            'id' => 0,
+            'id' => $request->ujian_id ?? 0,
         ]);
     }
+
 
 
 
@@ -80,7 +79,7 @@ class AdminKelompokController extends Controller
             }
         }
 
-        return Redirect::route('admin.kelompok.show', $request->id_ujian)
+        return Redirect::route('admin.kelompok.index', ['ujian_id' => $request->id_ujian])
             ->with(['message' => 'Data berhasil ditambahkan']);
     }
 
@@ -89,20 +88,7 @@ class AdminKelompokController extends Controller
      */
     public function show(Request $request, $id)
     {
-        if ($id) $request->session()->put('idujian', $id);
-        else  $request->session()->put('idujian', "");
-
-        $kelompok = Kelompok::leftJoin('peserta', 'peserta.id', '=', 'kelompok.id_peserta')
-            ->leftJoin('sesi', 'sesi.id', '=', 'kelompok.id_sesi')
-            ->select('peserta.no_ujian', 'peserta.nama_peserta', 'sesi.nama_sesi', 'kelompok.*')
-            ->where('kelompok.id_ujian', '=', $id)
-            ->orderBy('peserta.no_ujian', 'asc')->get();
-
-        return Inertia::render('Kelompok/Index', [
-            'ujian' => Ujian::all(),
-            'kelompok' => $kelompok,
-            'id' => $id
-        ]);
+        //
     }
 
     /**
@@ -129,7 +115,7 @@ class AdminKelompokController extends Controller
         $kelompok->delete();
 
         $ujian = $request->session()->get('idujian');
-        return Redirect::route('admin.kelompok.show', $ujian)
+        return Redirect::route('admin.kelompok.index', ['ujian_id' => $ujian])
             ->with(['message' => 'Data berhasil dihapus']);
     }
 
@@ -143,5 +129,13 @@ class AdminKelompokController extends Controller
     {
         $sesi = Sesi::where('id_ujian', $id)->get();
         return response()->json($sesi);
+    }
+
+    public function getPeserta($id)
+    {
+        $peserta_kelompok = Kelompok::where('id_ujian', $id)->pluck('id_peserta')->all();
+        $peserta = Peserta::whereNotIn('id', $peserta_kelompok)->get();
+
+        return response()->json($peserta);
     }
 }

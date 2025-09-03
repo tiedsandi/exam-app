@@ -34,8 +34,8 @@ Route::group(['middleware' => "auth", "prefix" => '/admin', 'as' => 'admin.'], f
 
     Route::get('/kelompok/setujian/{id}', [AdminKelompokController::class, 'setUjian'])->name('kelompok.setujian');
     Route::resource('/kelompok', AdminKelompokController::class);
-    Route::get('/kelompok/sesi/{id}', [AdminKelompokController::class, 'getSesi'])
-        ->name('kelompok.getsesi');
+    Route::get('/kelompok/sesi/{id}', [AdminKelompokController::class, 'getSesi'])->name('kelompok.getSesi');
+    Route::get('/kelompok/get-peserta/{id}', [AdminKelompokController::class, 'getPeserta'])->name('kelompok.getPeserta');
 });
 
 

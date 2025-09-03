@@ -7,7 +7,7 @@ import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import axios from "axios";
 
-export default function Create({ auth, ujian, peserta, ujianaktif }) {
+export default function Create({ auth, ujian, ujianaktif }) {
     const { data, setData, post, processing, errors } = useForm({
         id_ujian: ujianaktif || "",
         id_sesi: "",
@@ -15,31 +15,36 @@ export default function Create({ auth, ujian, peserta, ujianaktif }) {
     });
 
     const [selectedPeserta, setSelectedPeserta] = useState([]);
-    const [sesi, setSesi] = useState([]); // sesi diambil via ajax
+    const [sesi, setSesi] = useState([]);
+    const [peserta, setPeserta] = useState([]);
 
-    // ambil sesi saat id_ujian berubah
+    // ambil sesi & peserta saat id_ujian berubah
     useEffect(() => {
         if (data.id_ujian) {
             axios
-                .get(route("admin.kelompok.getsesi", data.id_ujian))
+                .get(route("admin.kelompok.getSesi", data.id_ujian))
                 .then((res) => {
                     setSesi(res.data);
-                    setData("id_sesi", ""); // reset pilihan sesi
+                    setData("id_sesi", ""); // reset sesi
+                });
+
+            axios
+                .get(route("admin.kelompok.getPeserta", data.id_ujian))
+                .then((res) => {
+                    setPeserta(res.data);
+                    setSelectedPeserta([]); // reset peserta terpilih
+                    setData("peserta", []);
                 });
         } else {
             setSesi([]);
+            setPeserta([]);
             setData("id_sesi", "");
+            setData("peserta", []);
         }
     }, [data.id_ujian]);
 
     const handleChange = (e) => {
         setData(e.target.name, e.target.value);
-
-        if (e.target.name === "id_ujian") {
-            // kalau ujian diganti → reset peserta terpilih
-            setSelectedPeserta([]);
-            setData("peserta", []);
-        }
     };
 
     const handleCheck = (no_ujian) => {
@@ -109,7 +114,7 @@ export default function Create({ auth, ujian, peserta, ujianaktif }) {
                                         value={data.id_sesi}
                                         onChange={handleChange}
                                         className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        disabled={!data.id_ujian} // disable kalau belum pilih ujian
+                                        disabled={!data.id_ujian}
                                     >
                                         <option value="">-Pilih Sesi-</option>
                                         {sesi.map((se) => (
@@ -155,8 +160,8 @@ export default function Create({ auth, ujian, peserta, ujianaktif }) {
                                                 </tr>
                                             </thead>
                                             <tbody className="bg-white divide-y divide-gray-200">
-                                                {peserta.map((pst, index) => (
-                                                    <tr key={index}>
+                                                {peserta.map((pst) => (
+                                                    <tr key={pst.id}>
                                                         <td className="px-4 py-2">
                                                             <input
                                                                 type="checkbox"
@@ -201,7 +206,6 @@ export default function Create({ auth, ujian, peserta, ujianaktif }) {
                                     <PrimaryButton disabled={processing}>
                                         Simpan
                                     </PrimaryButton>
-
                                     <Link
                                         href={route("admin.kelompok.index")}
                                         className="text-sm text-red-500 hover:underline"
