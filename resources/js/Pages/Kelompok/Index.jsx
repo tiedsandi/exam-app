@@ -116,7 +116,7 @@ export default function Index(props) {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {kelompok?.map((klp, index) => (
+                                {kelompok?.data?.map((klp, index) => (
                                     <tr key={klp.id}>
                                         <td className="px-4 py-2">
                                             {(kelompok.from ?? 0) + index}
