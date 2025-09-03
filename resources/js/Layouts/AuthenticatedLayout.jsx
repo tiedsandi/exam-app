@@ -40,8 +40,8 @@ const menuNav = [
     {
         icon: "fa-solid fa-users",
         title: "Peserta Per Sesi",
-        link: route("admin.dashboard"),
-        name: "peserta.sesi",
+        link: route("admin.kelompok.index"),
+        name: "admin.kelompok.*",
     },
     {
         icon: "fa-solid fa-square-check",

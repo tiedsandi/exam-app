@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminKelompokController;
 use App\Http\Controllers\Admin\AdminPesertaController;
 use App\Http\Controllers\Admin\AdminSesiController;
 use App\Http\Controllers\Admin\AdminSoalController;
@@ -30,6 +31,11 @@ Route::group(['middleware' => "auth", "prefix" => '/admin', 'as' => 'admin.'], f
     Route::get('/peserta/print', [AdminPesertaController::class, 'print'])->name('peserta.print');
     Route::get('/peserta/kartupdf', [AdminPesertaController::class, 'kartuPdf'])->name('peserta.kartupdf');
     Route::resource('/peserta', AdminPesertaController::class);
+
+    Route::get('/kelompok/setujian/{id}', [AdminKelompokController::class, 'setUjian'])->name('kelompok.setujian');
+    Route::resource('/kelompok', AdminKelompokController::class);
+    Route::get('/kelompok/sesi/{id}', [AdminKelompokController::class, 'getSesi'])
+        ->name('kelompok.getsesi');
 });
 
 
