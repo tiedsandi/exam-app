@@ -46,8 +46,8 @@ const menuNav = [
     {
         icon: "fa-solid fa-square-check",
         title: "Hasil Ujian",
-        link: route("admin.dashboard"),
-        name: "hasil.*",
+        link: route("admin.nilai.index"),
+        name: "nilai.*",
     },
 ];
 

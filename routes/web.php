@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminKelompokController;
+use App\Http\Controllers\Admin\AdminNilaiController;
 use App\Http\Controllers\Admin\AdminPesertaController;
 use App\Http\Controllers\Admin\AdminSesiController;
 use App\Http\Controllers\Admin\AdminSoalController;
@@ -36,6 +37,14 @@ Route::group(['middleware' => "auth", "prefix" => '/admin', 'as' => 'admin.'], f
     Route::resource('/kelompok', AdminKelompokController::class);
     Route::get('/kelompok/sesi/{id}', [AdminKelompokController::class, 'getSesi'])->name('kelompok.getSesi');
     Route::get('/kelompok/get-peserta/{id}', [AdminKelompokController::class, 'getPeserta'])->name('kelompok.getPeserta');
+
+    Route::get('/nilai/export/{id}', [AdminNilaiController::class, 'export'])
+        ->name('nilai.export');
+    Route::get('/nilai/exportjawaban/{id}', [AdminNilaiController::class, 'exportJawaban'])
+        ->name('nilai.export_jawaban');
+    Route::get('/nilai/view/{id}', [AdminNilaiController::class, 'view'])
+        ->name('nilai.view');
+    Route::resource('/nilai', AdminNilaiController::class);
 });
 
 
